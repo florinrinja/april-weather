@@ -23,8 +23,12 @@ defineProps<{ type: "loading" | "error" | "denied" }>();
     <!-- Geolocation denied -->
     <template v-else-if="type === 'denied'">
       <span class="state-icon">📍</span>
-      <p class="state-label">Location access denied.</p>
-      <p class="state-sub">Please allow location access in your browser and reload.</p>
+      <p class="state-label">
+        Location access denied.
+      </p>
+      <p class="state-sub">
+        Please allow location access in your browser and reload.
+      </p>
     </template>
   </div>
 </template>

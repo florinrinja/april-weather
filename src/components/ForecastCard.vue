@@ -12,7 +12,7 @@ defineProps<{ forecast: DailyForecast }>();
 <template>
   <div class="forecast-card">
     <span class="fc-day">{{ forecast.dayName.slice(0, 3) }}</span>
-    <WeatherIcon :condition="forecast.condition" :size="38" />
+    <WeatherIcon :type="forecast.condition" size="sm" />
     <span class="fc-temp">{{ Math.round(forecast.tempAvg) }}°</span>
     <div class="fc-details">
       <span class="fc-detail">
@@ -32,6 +32,7 @@ defineProps<{ forecast: DailyForecast }>();
 .forecast-card {
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   align-items: center;
   gap: 0.4rem;
   background: rgba(255, 255, 255, 0.12);

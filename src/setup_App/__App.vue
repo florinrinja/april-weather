@@ -1,48 +1,23 @@
-<script setup lang="ts">
-/**
- * App.vue — Root component
- *
- * Bootstraps the weather composable, drives the top-level layout,
- * and applies the dynamic gradient background based on current conditions.
- */
-import { onMounted, computed } from "vue";
-import { useWeather } from "./composables/useWeather";
+<script lang="ts">
+import { defineComponent } from "vue";
+import { useAppSetup } from "./__App.setup.ts";
 import CurrentWeather from "./components/CurrentWeather.vue";
 import ForecastCard from "./components/ForecastCard.vue";
 import AppState from "./components/AppState.vue";
 
-// Destructure everything the composable exposes.
-// `state`     — 'loading' | 'error' | 'denied' | 'success'
-// `current`   — current weather entry
-// `city`      — resolved city name
-// `forecasts` — array of 5-day forecast entries
-// `gradient`  — reactive pair of hex colours derived from weather condition
-// `init`      — async function that fetches geolocation then weather data
-const { 
-  state, 
-  current, 
-  city, 
-  forecasts, 
-  gradient, 
-  init 
-} = useWeather();
+export default defineComponent({
+  components: { CurrentWeather, ForecastCard, AppState },
 
-// Kick off geolocation + API fetch as soon as the component is mounted.
-onMounted(init);
-
-/**
- * Converts the reactive gradient pair into an inline style object.
- * Re-evaluates automatically whenever `gradient` changes (e.g. condition update).
- */
-const bgStyle = computed(() => ({
-  background: `linear-gradient(145deg, ${gradient.value[0]}, ${gradient.value[1]})`,
-}));
+  setup() {
+    // All logic lives in the companion file — setup() just wires it in.
+    return useAppSetup();
+  },
+});
 </script>
 
 <template>
   <!-- Full-viewport wrapper; receives the dynamic gradient as an inline style -->
   <div class="app" :style="bgStyle">
-
     <!-- Purely decorative ambient blobs — no interaction, no semantics -->
     <div class="blob blob-1" />
     <div class="blob blob-2" />
@@ -68,11 +43,7 @@ const bgStyle = computed(() => ({
 
         <!-- Horizontal strip of upcoming forecast cards -->
         <div class="forecast-strip">
-          <ForecastCard
-            v-for="(fc, i) in forecasts"
-            :key="i"
-            :forecast="fc"
-          />
+          <ForecastCard v-for="(fc, i) in forecasts" :key="i" :forecast="fc" />
         </div>
       </template>
     </div>
@@ -127,7 +98,8 @@ body {
   border-radius: 50%;
   filter: blur(60px);
   opacity: 0.25;
-  pointer-events: none; /* Never intercept clicks */
+  pointer-events: none;
+  /* Never intercept clicks */
 }
 
 /* Top-right highlight */
@@ -157,9 +129,8 @@ body {
   width: 100%;
   max-width: 460px;
   backdrop-filter: blur(20px);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.15),
-    0 1px 0 rgba(255, 255, 255, 0.3) inset; /* Subtle top-edge shimmer */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 1px 0 rgba(255, 255, 255, 0.3) inset;
+  /* Subtle top-edge shimmer */
   animation: fadeUp 0.6s ease both;
 }
 
@@ -182,7 +153,8 @@ body {
   color: rgba(255, 255, 255, 0.35);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  z-index: 1; /* Stay above the blobs */
+  z-index: 1;
+  /* Stay above the blobs */
 }
 
 /* ─── Entrance animation ──────────────────────────────────────────────────── */
@@ -191,6 +163,7 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -202,6 +175,7 @@ body {
   .card {
     padding: 1.5rem 1.25rem;
   }
+
   .forecast-strip {
     gap: 0.4rem;
   }
